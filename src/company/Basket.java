@@ -27,9 +27,16 @@ public class Basket {
     }
 
     public boolean checkForProducts(){
-        if (products.size() != 0) {
+        if (this.products.size() != 0) {
             return true;
         } else
             return false;
+    }
+    public int countProductsInBasket(){
+        int n=0;
+        for (Product product:this.products){
+            n++;
+        }
+        return n;
     }
 }

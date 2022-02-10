@@ -33,4 +33,8 @@ public class User {
     public void addToBasket(Product product) {
         this.basket.add(product);
     }
+
+    public int takeCountsOfProduktsFromBasket(){
+        return this.basket.countProductsInBasket();
+    }
 }
