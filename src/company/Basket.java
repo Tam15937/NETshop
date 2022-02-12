@@ -33,10 +33,6 @@ public class Basket {
             return false;
     }
     public int countProductsInBasket(){
-        int n=0;
-        for (Product product:this.products){
-            n++;
-        }
-        return n;
+        return products.size();
     }
 }

@@ -13,13 +13,14 @@ public class Menu {
     private static boolean productIsSelected = false;
     private static int numberOfSelectedProduct;
 
+
     public Menu() {
         AppData.initializeForStart();
         this.menu();
     }
 
     public void menu() {
-        while (true) {
+        while (!userIsAuthorized) {
             User user = login();
             numberOfAuthorizedUser = AppData.getUsers().indexOf(user);
             userIsAuthorized = checkPassword(user);
@@ -37,8 +38,12 @@ public class Menu {
                                     productIsSelected = false;
                                     break;
                                 case 1:
+                                    user.setUserActionIsBasket(false);
+                                    user.addToBasket(AppData.categories.get(numberOfSelectedCategory).getProducts().get(numberOfSelectedProduct));
+                                    productIsSelected = false;
                                     break;
                                 case 2:
+                                    user.setUserActionIsBasket(true);
                                     user.addToBasket(AppData.categories.get(numberOfSelectedCategory).getProducts().get(numberOfSelectedProduct));
                                     productIsSelected = false;
                                     break;
@@ -209,6 +214,8 @@ public class Menu {
                     int action = in.nextInt();
                     if (action != 0 && action<=user.takeCountsOfProduktsFromBasket()) {
                         user.removeFromBasket(action - 1);
+                        user.setUserActionIsBasket(false);
+                        user.addToBasket(AppData.categories.get(numberOfSelectedCategory).getProducts().get(action-1));
                     } else {
                         System.out.println("\nНеверное значение действия");
                     }
