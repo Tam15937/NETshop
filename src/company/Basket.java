@@ -18,8 +18,10 @@ public class Basket {
         }
     }
 
-    public void remove(int number) {
+    public Product remove(int number) {
+        Product product=products.get(number);
         this.products.remove(number);
+        return product;
     }
 
     public void add(Product product) {
@@ -27,10 +29,7 @@ public class Basket {
     }
 
     public boolean checkForProducts(){
-        if (this.products.size() != 0) {
-            return true;
-        } else
-            return false;
+        return this.products.size() != 0;
     }
     public int countProductsInBasket(){
         return products.size();

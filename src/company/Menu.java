@@ -1,10 +1,13 @@
 package company;
 
+import org.w3c.dom.ls.LSOutput;
+
+import javax.swing.plaf.IconUIResource;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Menu {
-    private static boolean userIsAuthorized = false;
+    private static boolean userIsAuthorized;
     private static int numberOfAuthorizedUser;
 
     private static boolean categoryIsSelected = false;
@@ -16,11 +19,10 @@ public class Menu {
 
     public Menu() {
         AppData.initializeForStart();
-        this.menu();
     }
 
     public void menu() {
-        while (!userIsAuthorized) {
+        while (true) {
             User user = login();
             numberOfAuthorizedUser = AppData.getUsers().indexOf(user);
             userIsAuthorized = checkPassword(user);
@@ -30,20 +32,19 @@ public class Menu {
 
                 while (!productIsSelected && categoryIsSelected) {
                     numberOfSelectedProduct = selectProduct();
-                    if (numberOfSelectedProduct != -1) {
+                    if (numberOfSelectedProduct > -1) {
                         while (productIsSelected) {
+                            Product product = AppData.categories.get(numberOfSelectedCategory).getProducts().get(numberOfSelectedProduct);
                             int action = actionOfProduct();
                             switch (action) {
                                 case 0:
                                     productIsSelected = false;
                                     break;
                                 case 1:
-                                    user.setUserActionIsBasket(false);
-                                    user.addToBasket(AppData.categories.get(numberOfSelectedCategory).getProducts().get(numberOfSelectedProduct));
+                                    user.byProduct(product);
                                     productIsSelected = false;
                                     break;
                                 case 2:
-                                    user.setUserActionIsBasket(true);
                                     user.addToBasket(AppData.categories.get(numberOfSelectedCategory).getProducts().get(numberOfSelectedProduct));
                                     productIsSelected = false;
                                     break;
@@ -53,7 +54,12 @@ public class Menu {
                             }
                         }
                     } else if (categoryIsSelected) {
-                        actionOfBasket();
+                        if (numberOfSelectedProduct == -1) {
+                            actionOfBasket();
+                        } else {
+                            System.out.println("\nВот список покупок:");
+                            user.showPurchase();
+                        }
                     }
                 }
             }
@@ -142,6 +148,7 @@ public class Menu {
                 System.out.println(i + 1 + ". " + products.get(i));
             }
             System.out.println("\nN. Выбрать товар под номером N");
+            System.out.println("Введите 'P' для просмотра покупок ");
             System.out.println("Введите 'B' для просмотра корзины ");
             System.out.println("Введите 'Q' для выхода");
             System.out.print("\nВведите значение --> ");
@@ -149,7 +156,7 @@ public class Menu {
 
             if (in.hasNextInt()) {
                 point = in.nextInt() - 1;
-                if (point <= products.size() && point >= 0) {
+                if (point < products.size() && point >= 0) {
                     numberOfSelectedProduct = point;
                     productIsSelected = true;
                     flag = true;
@@ -158,7 +165,33 @@ public class Menu {
                 }
             } else {
                 String action = in.next();
-                if (action.equals("B") || action.equals("b")) {
+
+                User user = AppData.getUsers().get(numberOfAuthorizedUser);
+                switch (action) {
+
+                    case "P", "p":
+
+                        if (user.checkPurchaseForProduct())
+                            return -2;
+                        else System.out.println("\nНет купленых товаров.\n");
+                        break;
+
+                    case "B", "b":
+                        if (user.checkBasketForProduct())
+                            return -1;
+                        else System.out.println("\nНет товаров в корзине.\n");
+                        break;
+
+                    case "Q", "q":
+                        categoryIsSelected = false;
+                        return -1;
+
+                    default:
+                        System.out.println("\nНеверное значение ввода.\nВводить нужно \n");
+                        break;
+                }
+
+                /*if (action.equals("B") || action.equals("b")) {
                     if (AppData.getUsers().get(numberOfAuthorizedUser).checkBasketForProduct())
                         return -1;
                     else System.out.println("\nНет товаров в корзине.\n");
@@ -168,15 +201,14 @@ public class Menu {
                     return -1;
                 } else {
                     System.out.println("\nНеверный формат номера товара.\nВводить нужно номер (число) выбранного товара\n");
-                }
+                }*/
             }
         }
         return point;
     }
 
     public int actionOfProduct() {
-        boolean flag = false;
-        while (!flag) {
+        while (true) {
             System.out.println("\n1. Купить товар");
             System.out.println("2. Добавить товар в корзину");
             System.out.println("Q. Выход\n");
@@ -193,7 +225,6 @@ public class Menu {
                 }
             }
         }
-        return 0;
     }
 
     public void actionOfBasket() {
@@ -207,20 +238,20 @@ public class Menu {
             } else {
                 user.showBasket();
                 System.out.println("\nN. купить товар под номером N");
+                System.out.println("A. Купить все товары в корзине");
+                System.out.println("D. Убрать товар из корзины");
                 System.out.println("Q. Выход");
                 System.out.print("\nВведите значение --> ");
                 Scanner in = new Scanner(System.in);
                 if (in.hasNextInt()) {
                     int action = in.nextInt();
-                    if (action != 0 && action<=user.takeCountsOfProduktsFromBasket()) {
-                        user.removeFromBasket(action - 1);
-                        user.setUserActionIsBasket(false);
-                        user.addToBasket(AppData.categories.get(numberOfSelectedCategory).getProducts().get(action-1));
+                    if (action != 0 && action <= user.takeCountsOfProduktsFromBasket()) {
+                        user.byFromBasket(action - 1);
                     } else {
                         System.out.println("\nНеверное значение действия");
                     }
                 } else {
-                    flag=true;
+                    flag = true;
                 }
             }
         }

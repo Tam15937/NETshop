@@ -1,19 +1,40 @@
 package company;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
 public class User {
     private String login;
     private String password;
     private Basket basket;
-    private Basket purchase;
-
-    private boolean userActionIsBasket;
+    private ArrayList<Product> purchase;
 
 
     public User(String login, String password) {
         this.login = login;
         this.password = password;
         this.basket = new Basket();
-        this.purchase=new Basket();
+        this.purchase = new ArrayList<>();
     }
+
+    public void byProduct(Product product) {
+        this.purchase.add(product);
+        System.out.println("\nУспешно куплено!\n");
+    }
+
+    public void showPurchase() {
+        while (true) {
+            int k = 1;
+            for (Product product : purchase) {
+                System.out.println(k + ". " + product.toString());
+                k++;
+            }
+            System.out.print("\nНажмите любую клавишу --> ");
+            Scanner in=new Scanner(System.in);
+            String action=in.nextLine();
+            return;
+            }
+        }
 
     public String getLogin() {
         return login;
@@ -24,42 +45,27 @@ public class User {
     }
 
     public void showBasket() {
-        if(userActionIsBasket)
-            this.basket.show();
-        else
-            this.purchase.show();
+        this.basket.show();
     }
 
-    public boolean checkBasketForProduct(){
-        if(userActionIsBasket)
-            return this.basket.checkForProducts();
-        else
-            return this.purchase.checkForProducts();
+    public boolean checkBasketForProduct() {
+        return this.basket.checkForProducts();
     }
 
-    public void removeFromBasket(int number) {
-        if(userActionIsBasket)
-            this.basket.remove(number);
-        else
-            this.purchase.remove(number);
+    public boolean checkPurchaseForProduct() {
+        return this.purchase.size() != 0;
+    }
+
+    public void byFromBasket(int number) {
+        Product product = this.basket.remove(number);
+        this.purchase.add(product);
     }
 
     public void addToBasket(Product product) {
-        if(userActionIsBasket)
-            this.basket.add(product);
-        else
-            this.purchase.add(product);
+        this.basket.add(product);
     }
 
-    public int takeCountsOfProduktsFromBasket(){
-        if(userActionIsBasket)
-            return this.basket.countProductsInBasket();
-        else
-            return this.purchase.countProductsInBasket();
-
-    }
-
-    public void setUserActionIsBasket(boolean userActionIsBasket) {
-        this.userActionIsBasket = userActionIsBasket;
+    public int takeCountsOfProduktsFromBasket() {
+        return this.basket.countProductsInBasket();
     }
 }
