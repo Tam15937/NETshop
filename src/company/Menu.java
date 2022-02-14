@@ -15,23 +15,29 @@ public class Menu {
             System.out.println("0. Выход\n");
             System.out.print("Выберите действие --> ");
             Scanner in = new Scanner(System.in);
-            int action = in.nextInt();
-            switch (action) {
+            if (in.hasNextInt()) {
+                int action = in.nextInt();
+                switch (action) {
 
-                case 1:
-                    User user = checkPassword(checkLogin());
+                    case 1:
+                        User user = checkLogin();
+                        if (user != null)
+                            user = checkPassword(user);
 
-                    if (user != null) {
-                        categoryMenu(user);
-                    }
-                    break;
+                        if (user != null) {
+                            categoryMenu(user);
+                        }
+                        break;
 
-                case 0:
-                    System.exit(0);
+                    case 0:
+                        System.exit(0);
 
-                default:
-                    System.out.println("\nНеверный ввод.\n");
-                    break;
+                    default:
+                        System.out.println("\nНеверный ввод.\n");
+                        break;
+                }
+            } else {
+                System.out.println("\nНеверный формат.\nВводить нужно номер (число) выбранного действия\n");
             }
         }
     }
@@ -65,7 +71,7 @@ public class Menu {
                         break;
                 }
             } else {
-                System.out.println("\nНеверный формат, или номер категории.\nВводить нужно номер (число) выбранной категории\n");
+                System.out.println("\nНеверный формат.\nВводить нужно номер (число) выбранной категории\n");
             }
         }
     }
@@ -112,7 +118,7 @@ public class Menu {
                         System.out.println("\nНеверное значение ввода.\n");
                         break;
                 }
-            }else{
+            } else {
                 System.out.println("\nНеверный формат.\nВводить нужно номер (число) выбранного действия\n Или номер товара\n");
             }
         }
@@ -202,32 +208,24 @@ public class Menu {
     }
 
     public User checkLogin() {
-        while (true) {
 
-            System.out.print("Введите логин --> ");
+        System.out.print("Введите логин --> ");
 
-            Scanner in = new Scanner(System.in);
-            String login = in.next();
+        Scanner in = new Scanner(System.in);
+        String login = in.next();
 
-            User user = AppData.findUserByLogin(login);
-
-            if (user != null) {
-                return user;
-            }
-        }
+        return AppData.findUserByLogin(login);
     }
 
     public User checkPassword(User user) {
-        while (true) {
-            System.out.print("Введите пароль --> ");
-            Scanner in = new Scanner(System.in);
-            String password = in.next();
-            if (user.getPassword().equals(password)) {
-                return user;
-            } else {
-                System.out.println("\nНеверный пароль!\n");
-                return null;
-            }
+        System.out.print("Введите пароль --> ");
+        Scanner in = new Scanner(System.in);
+        String password = in.next();
+        if (user.getPassword().equals(password)) {
+            return user;
+        } else {
+            System.out.println("\nНеверный пароль!\n");
+            return null;
         }
     }
 }
