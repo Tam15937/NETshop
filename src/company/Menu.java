@@ -1,258 +1,232 @@
 package company;
 
-import org.w3c.dom.ls.LSOutput;
-
-import javax.swing.plaf.IconUIResource;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Menu {
-    private static boolean userIsAuthorized;
-    private static int numberOfAuthorizedUser;
-
-    private static boolean categoryIsSelected = false;
-    private static int numberOfSelectedCategory;
-
-    private static boolean productIsSelected = false;
-    private static int numberOfSelectedProduct;
-
 
     public Menu() {
         AppData.initializeForStart();
     }
 
-    public void menu() {
+    public void authorizationMenu() {
         while (true) {
-            User user = login();
-            numberOfAuthorizedUser = AppData.getUsers().indexOf(user);
-            userIsAuthorized = checkPassword(user);
+            System.out.println("\n1. Авторизоваться");
+            System.out.println("0. Выход\n");
+            System.out.print("Выберите действие --> ");
+            Scanner in = new Scanner(System.in);
+            int action = in.nextInt();
+            switch (action) {
 
-            while (!categoryIsSelected && userIsAuthorized) {
-                categoryIsSelected = selectCategory();
+                case 1:
+                    User user = checkPassword(checkLogin());
 
-                while (!productIsSelected && categoryIsSelected) {
-                    numberOfSelectedProduct = selectProduct();
-                    if (numberOfSelectedProduct > -1) {
-                        while (productIsSelected) {
-                            Product product = AppData.categories.get(numberOfSelectedCategory).getProducts().get(numberOfSelectedProduct);
-                            int action = actionOfProduct();
-                            switch (action) {
-                                case 0:
-                                    productIsSelected = false;
-                                    break;
-                                case 1:
-                                    user.byProduct(product);
-                                    productIsSelected = false;
-                                    break;
-                                case 2:
-                                    user.addToBasket(AppData.categories.get(numberOfSelectedCategory).getProducts().get(numberOfSelectedProduct));
-                                    productIsSelected = false;
-                                    break;
-                                default:
-                                    System.out.println("\nНеверное значение действия\n");
-                                    break;
-                            }
-                        }
-                    } else if (categoryIsSelected) {
-                        if (numberOfSelectedProduct == -1) {
-                            actionOfBasket();
-                        } else {
-                            System.out.println("\nВот список покупок:");
-                            user.showPurchase();
-                        }
+                    if (user != null) {
+                        categoryMenu(user);
                     }
+                    break;
+
+                case 0:
+                    System.exit(0);
+
+                default:
+                    System.out.println("\nНеверный ввод.\n");
+                    break;
+            }
+        }
+    }
+
+    public void categoryMenu(User user) {
+        while (true) {
+            System.out.println("\nВоть Список категорий");
+            for (int i = 0; i < AppData.categories.size(); i++) {
+                System.out.println(i + 1 + ". " + AppData.categories.get(i).getName());
+            }
+            System.out.println("\n0. Назад");
+            System.out.print("Выберите категорию --> ");
+
+            Scanner in = new Scanner(System.in);
+
+
+            if (in.hasNextInt()) {
+                int number = in.nextInt();
+                int action = number;
+                if (number > 0 && number <= AppData.categories.size()) action = 1;
+                switch (action) {
+                    case 0:
+                        return;
+
+                    case 1:
+                        Category category = AppData.categories.get(number - 1);
+                        productsMenu(category, user);
+                        break;
+                    default:
+                        System.out.println("\nНеверный номер категории\nВведите номер предложенной категории из списка\n");
+                        break;
+                }
+            } else {
+                System.out.println("\nНеверный формат, или номер категории.\nВводить нужно номер (число) выбранной категории\n");
+            }
+        }
+    }
+
+    public void productsMenu(Category category, User user) {
+
+        ArrayList<Product> products = category.getProducts();
+
+        while (true) {
+            System.out.println("\nВоть Список товаров");
+
+            for (int i = 0; i < products.size(); i++) {
+                System.out.println(i + 1 + ". " + products.get(i));
+            }
+
+            System.out.println("\nN. Выбрать товар под номером N");
+            System.out.println("-2. для просмотра покупок ");
+            System.out.println("-1. для просмотра корзины ");
+            System.out.println("0. для выхода");
+            System.out.print("\nВведите значение --> ");
+
+            Scanner in = new Scanner(System.in);
+            if (in.hasNextInt()) {
+                int number = in.nextInt();
+                int action = number;
+                if (number > 0 && number <= products.size()) action = 1;
+
+                switch (action) {
+                    case 1:
+                        actionOfProductMenu(products.get(number - 1), user);
+                        break;
+                    case 0:
+                        return;
+                    case -1:
+                        basketMenu(user);
+                        break;
+
+                    case -2:
+                        if (user.lookingForProductsInPurchases())
+                            user.showPurchase();
+                        else System.out.println("Нет покупок, сходите в магазин!");
+                        break;
+                    default:
+                        System.out.println("\nНеверное значение ввода.\n");
+                        break;
+                }
+            }else{
+                System.out.println("\nНеверный формат.\nВводить нужно номер (число) выбранного действия\n Или номер товара\n");
+            }
+        }
+    }
+
+    public void actionOfProductMenu(Product product, User user) {
+        boolean flag = false;
+        while (!flag) {
+            System.out.println("\n" + product.toString());
+            System.out.println("\n1. Купить товар");
+            System.out.println("2. Добавить товар в корзину");
+            System.out.println("0. Выход\n");
+            System.out.print("Выберите действие --> ");
+            Scanner in = new Scanner(System.in);
+            if (in.hasNextInt()) {
+                int action = in.nextInt();
+                switch (action) {
+
+                    case 0:
+                        return;
+
+                    case 1:
+                        user.byProduct(product);
+                        flag = true;
+                        break;
+
+                    case 2:
+                        user.addToBasket(product);
+                        flag = true;
+                        break;
+
+                    default:
+                        System.out.println("\nНеверное значение действия\n");
+                        break;
+                }
+            } else {
+                System.out.println("\nНеверный формат.\nВводить нужно номер (число) выбранного действия\n");
+            }
+        }
+    }
+
+    public void basketMenu(User user) {
+
+        while (true) {
+            if (user.lookingForProductsInBasket()) {
+                System.out.println("\nНет товаров в корзине.\n");
+                return;
+            } else {
+                user.showBasket();
+                System.out.println("\nN. Купить товар под номером N");
+                System.out.println("-1. Купить все товары в корзине");
+                System.out.println("-2. Убрать товар из корзины");
+                System.out.println("0. Выход");
+                System.out.print("\nВведите значение --> ");
+                Scanner in = new Scanner(System.in);
+                if (in.hasNextInt()) {
+                    int number = in.nextInt();
+                    int action = number;
+                    if (action > 0 && action <= user.takeCountsOfProduktsFromBasket()) action = 1;
+                    switch (action) {
+                        case 0:
+                            return;
+
+                        case 1:
+                            user.byFromBasket(number - 1);
+                            System.out.println("\nУспешно куплено!\n");
+                            break;
+
+                        case -1:
+                            user.byAllFromBasket();
+                            System.out.println("\nУспешно куплено!\n");
+                            break;
+
+                        case -2:
+                            user.removeFromBasket(number - 1);
+                            break;
+
+                        default:
+                            System.out.println("\nНеверное значение действия");
+                            break;
+                    }
+                } else {
+                    System.out.println("\nНеверный формат.\nВводить нужно номер (число) выбранного действия\n Или номер товара\n");
                 }
             }
         }
     }
 
-    public User login() {
-        boolean flag = false;
-        User user = null;
-        while (!flag) {
+    public User checkLogin() {
+        while (true) {
 
-            System.out.print("\nВведите логин --> ");
+            System.out.print("Введите логин --> ");
 
             Scanner in = new Scanner(System.in);
             String login = in.next();
 
-            user = AppData.findUserByLogin(login);
+            User user = AppData.findUserByLogin(login);
+
             if (user != null) {
-                flag = true;
-            } else {
-                System.out.println("Неверный логин.\n");
+                return user;
             }
         }
-        return user;
     }
 
-    public boolean checkPassword(User user) {
-        boolean flag = false;
-        while (!flag) {
-            System.out.print("\nQ. Выход \n");
+    public User checkPassword(User user) {
+        while (true) {
             System.out.print("Введите пароль --> ");
             Scanner in = new Scanner(System.in);
             String password = in.next();
             if (user.getPassword().equals(password)) {
-                flag = true;
-            } else if (password.equals("Q") || password.equals("q")) {
-                return false;
+                return user;
             } else {
-                System.out.println("Неверный пароль.\n");
-            }
-        }
-        return true;
-    }
-
-    public boolean selectCategory() {
-
-        boolean flag = false;
-        while (!flag) {
-            System.out.println("\nВоть каталог / Список категорий товаров");
-            for (int i = 0; i < AppData.categories.size(); i++) {
-                System.out.println(i + 1 + ". " + AppData.categories.get(i).getName());
-            }
-            System.out.println("\nQ. Выход");
-            System.out.print("Выберите категорию --> ");
-
-            Scanner in = new Scanner(System.in);
-            if (in.hasNextInt()) {
-                int point = in.nextInt() - 1;
-                if (point <= AppData.categories.size() && point >= 0) {
-                    numberOfSelectedCategory = point;
-                    flag = true;
-                } else {
-                    System.out.println("\nНеверный номер категории\nВведите номер предложенной категории из списка\n");
-                }
-            } else {
-                String action = in.next();
-                if (action.equals("Q") || action.equals("q")) {
-                    userIsAuthorized = false;
-                    return false;
-                } else {
-                    System.out.println("\nНеверный формат, или номер категории.\nВводить нужно номер (число) выбранной категории\n");
-                }
-            }
-        }
-        return true;
-    }
-
-    public int selectProduct() {
-
-        ArrayList<Product> products = AppData.categories.get(numberOfSelectedCategory).getProducts();
-        int point = -1;
-        boolean flag = false;
-        while (!flag) {
-            System.out.println("\nВоть каталог / Список товаров");
-            for (int i = 0; i < products.size(); i++) {
-                System.out.println(i + 1 + ". " + products.get(i));
-            }
-            System.out.println("\nN. Выбрать товар под номером N");
-            System.out.println("Введите 'P' для просмотра покупок ");
-            System.out.println("Введите 'B' для просмотра корзины ");
-            System.out.println("Введите 'Q' для выхода");
-            System.out.print("\nВведите значение --> ");
-            Scanner in = new Scanner(System.in);
-
-            if (in.hasNextInt()) {
-                point = in.nextInt() - 1;
-                if (point < products.size() && point >= 0) {
-                    numberOfSelectedProduct = point;
-                    productIsSelected = true;
-                    flag = true;
-                } else {
-                    System.out.println("\nНеверный номер товара\nВведите номер предложенного товара из списка\n");
-                }
-            } else {
-                String action = in.next();
-
-                User user = AppData.getUsers().get(numberOfAuthorizedUser);
-                switch (action) {
-
-                    case "P", "p":
-
-                        if (user.checkPurchaseForProduct())
-                            return -2;
-                        else System.out.println("\nНет купленых товаров.\n");
-                        break;
-
-                    case "B", "b":
-                        if (user.checkBasketForProduct())
-                            return -1;
-                        else System.out.println("\nНет товаров в корзине.\n");
-                        break;
-
-                    case "Q", "q":
-                        categoryIsSelected = false;
-                        return -1;
-
-                    default:
-                        System.out.println("\nНеверное значение ввода.\nВводить нужно \n");
-                        break;
-                }
-
-                /*if (action.equals("B") || action.equals("b")) {
-                    if (AppData.getUsers().get(numberOfAuthorizedUser).checkBasketForProduct())
-                        return -1;
-                    else System.out.println("\nНет товаров в корзине.\n");
-
-                } else if (action.equals("Q") || action.equals("q")) {
-                    categoryIsSelected = false;
-                    return -1;
-                } else {
-                    System.out.println("\nНеверный формат номера товара.\nВводить нужно номер (число) выбранного товара\n");
-                }*/
-            }
-        }
-        return point;
-    }
-
-    public int actionOfProduct() {
-        while (true) {
-            System.out.println("\n1. Купить товар");
-            System.out.println("2. Добавить товар в корзину");
-            System.out.println("Q. Выход\n");
-            System.out.print("Выберите действие --> ");
-            Scanner in = new Scanner(System.in);
-            if (in.hasNextInt()) {
-                return in.nextInt();
-            } else {
-                String action = in.next();
-                if (action.equals("Q") || action.equals("q")) {
-                    return 0;
-                } else {
-                    System.out.println("\nНеверное значение действия\n");
-                }
-            }
-        }
-    }
-
-    public void actionOfBasket() {
-        User user = AppData.getUsers().get(numberOfAuthorizedUser);
-
-        boolean flag = false;
-        while (!flag) {
-            if (!AppData.getUsers().get(numberOfAuthorizedUser).checkBasketForProduct()) {
-                System.out.println("\nНет товаров в корзине.\n");
-                flag = true;
-            } else {
-                user.showBasket();
-                System.out.println("\nN. купить товар под номером N");
-                System.out.println("A. Купить все товары в корзине");
-                System.out.println("D. Убрать товар из корзины");
-                System.out.println("Q. Выход");
-                System.out.print("\nВведите значение --> ");
-                Scanner in = new Scanner(System.in);
-                if (in.hasNextInt()) {
-                    int action = in.nextInt();
-                    if (action != 0 && action <= user.takeCountsOfProduktsFromBasket()) {
-                        user.byFromBasket(action - 1);
-                    } else {
-                        System.out.println("\nНеверное значение действия");
-                    }
-                } else {
-                    flag = true;
-                }
+                System.out.println("\nНеверный пароль!\n");
+                return null;
             }
         }
     }

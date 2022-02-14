@@ -23,17 +23,14 @@ public class User {
     }
 
     public void showPurchase() {
-        while (true) {
             int k = 1;
             for (Product product : purchase) {
                 System.out.println(k + ". " + product.toString());
                 k++;
             }
-            System.out.print("\nНажмите любую клавишу --> ");
+            System.out.print("\nНажмите Enter, что бы продолжить... ");
             Scanner in=new Scanner(System.in);
             String action=in.nextLine();
-            return;
-            }
         }
 
     public String getLogin() {
@@ -48,11 +45,11 @@ public class User {
         this.basket.show();
     }
 
-    public boolean checkBasketForProduct() {
+    public boolean lookingForProductsInBasket() {
         return this.basket.checkForProducts();
     }
 
-    public boolean checkPurchaseForProduct() {
+    public boolean lookingForProductsInPurchases() {
         return this.purchase.size() != 0;
     }
 
@@ -61,11 +58,20 @@ public class User {
         this.purchase.add(product);
     }
 
+    public void byAllFromBasket(){
+        ArrayList<Product> products=this.basket.removeAll();
+        this.purchase.addAll(products);
+    }
+
     public void addToBasket(Product product) {
         this.basket.add(product);
     }
 
     public int takeCountsOfProduktsFromBasket() {
         return this.basket.countProductsInBasket();
+    }
+
+    public void removeFromBasket(int number){
+        this.basket.remove(number);
     }
 }

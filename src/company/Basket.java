@@ -23,13 +23,18 @@ public class Basket {
         this.products.remove(number);
         return product;
     }
+    public ArrayList<Product> removeAll(){
+        ArrayList<Product> p=products;
+        this.products=new ArrayList<>();
+        return p;
+    }
 
     public void add(Product product) {
         this.products.add(product);
     }
 
     public boolean checkForProducts(){
-        return this.products.size() != 0;
+        return this.products.size() == 0;
     }
     public int countProductsInBasket(){
         return products.size();

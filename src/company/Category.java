@@ -18,4 +18,5 @@ public class Category {
     public ArrayList<Product> getProducts() {
         return products;
     }
+
 }
