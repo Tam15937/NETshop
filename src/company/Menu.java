@@ -12,71 +12,68 @@ public class Menu {
     public void authorizationMenu() {
         while (true) {
             System.out.println("\n1. Авторизоваться");
+            System.out.println("\n2. Зарегестрироваться");
             System.out.println("0. Выход\n");
             System.out.print("Выберите действие --> ");
-            Scanner in = new Scanner(System.in);
-            if (in.hasNextInt()) {
-                int action = in.nextInt();
+
+
                 switch (action) {
-
                     case 1:
-                        User user = checkLogin();
+                        User user = login();
                         if (user != null)
-                            user = checkPassword(user);
-
-                        if (user != null) {
+                            if(checkPassword(user)) {
                             categoryMenu(user);
                         }
                         break;
 
+                    case 2:
+//                        User user
                     case 0:
                         System.exit(0);
-
                     default:
                         System.out.println("\nНеверный ввод.\n");
                         break;
                 }
-            } else {
-                System.out.println("\nНеверный формат.\nВводить нужно номер (число) выбранного действия\n");
-            }
+
         }
     }
 
+/*    public User registrationMenu() {
+        Scanner in = new Scanner(System.in);
+        String login = in.next();
+        String password = in.next();
+        return AppData.registration(login, password);
+    }*/
+
     public void categoryMenu(User user) {
         while (true) {
+            ArrayList<Category> categories = AppData.categories;
             System.out.println("\nВоть Список категорий");
-            for (int i = 0; i < AppData.categories.size(); i++) {
-                System.out.println(i + 1 + ". " + AppData.categories.get(i).getName());
+            for (int i = 0; i < categories.size(); i++) {
+                System.out.println(i + 1 + ". " + categories.get(i).getName());
             }
             System.out.println("\n0. Назад");
             System.out.print("Выберите категорию --> ");
 
             Scanner in = new Scanner(System.in);
 
-
-            if (in.hasNextInt()) {
+            if (in.hasNextInt()) {//todo try
                 int number = in.nextInt();
                 int action = number;
-                if (number > 0 && number <= AppData.categories.size()) action = 1;
-                switch (action) {
-                    case 0:
-                        return;
 
-                    case 1:
-                        Category category = AppData.categories.get(number - 1);
-                        productsMenu(category, user);
-                        break;
-                    default:
-                        System.out.println("\nНеверный номер категории\nВведите номер предложенной категории из списка\n");
-                        break;
+                if (action == 0) return;
+                else if (action > 0 && action <= categories.size()) {
+                    Category category = categories.get(number - 1);
+                    productsMenu(user, category);
+                } else {
+                    System.out.println("\nНеверный номер категории\nВведите номер предложенной категории из списка\n");
                 }
-            } else {
-                System.out.println("\nНеверный формат.\nВводить нужно номер (число) выбранной категории\n");
+
             }
         }
     }
 
-    public void productsMenu(Category category, User user) {
+    public void productsMenu(User user, Category category) {
 
         ArrayList<Product> products = category.getProducts();
 
@@ -93,15 +90,15 @@ public class Menu {
             System.out.println("0. для выхода");
             System.out.print("\nВведите значение --> ");
 
-            Scanner in = new Scanner(System.in);
+            Scanner in = new Scanner(System.in);//todo
             if (in.hasNextInt()) {
                 int number = in.nextInt();
                 int action = number;
-                if (number > 0 && number <= products.size()) action = 1;
+                if (number > 0 && number <= products.size()) action = 1; //todo
 
                 switch (action) {
                     case 1:
-                        actionOfProductMenu(products.get(number - 1), user);
+                        actionOfProductMenu(products.get(number - 1), user);//todo
                         break;
                     case 0:
                         return;
@@ -111,7 +108,7 @@ public class Menu {
 
                     case -2:
                         if (user.lookingForProductsInPurchases())
-                            user.showPurchase();
+                            user.showPurchase();//todo
                         else System.out.println("Нет покупок, сходите в магазин!");
                         break;
                     default:
@@ -125,8 +122,7 @@ public class Menu {
     }
 
     public void actionOfProductMenu(Product product, User user) {
-        boolean flag = false;
-        while (!flag) {
+        while (true) {
             System.out.println("\n" + product.toString());
             System.out.println("\n1. Купить товар");
             System.out.println("2. Добавить товар в корзину");
@@ -142,13 +138,11 @@ public class Menu {
 
                     case 1:
                         user.byProduct(product);
-                        flag = true;
-                        break;
+                        return;
 
                     case 2:
                         user.addToBasket(product);
-                        flag = true;
-                        break;
+                        return;
 
                     default:
                         System.out.println("\nНеверное значение действия\n");
@@ -163,7 +157,7 @@ public class Menu {
     public void basketMenu(User user) {
 
         while (true) {
-            if (user.lookingForProductsInBasket()) {
+            if (user.lookingForProductsInBasket()) {//todo
                 System.out.println("\nНет товаров в корзине.\n");
                 return;
             } else {
@@ -173,17 +167,17 @@ public class Menu {
                 System.out.println("-2. Убрать товар из корзины");
                 System.out.println("0. Выход");
                 System.out.print("\nВведите значение --> ");
-                Scanner in = new Scanner(System.in);
+                Scanner in = new Scanner(System.in);//todo
                 if (in.hasNextInt()) {
                     int number = in.nextInt();
                     int action = number;
-                    if (action > 0 && action <= user.takeCountsOfProduktsFromBasket()) action = 1;
+                    if (action > 0 && action <= user.takeCountsOfProduktsFromBasket()) action = 1;//todo
                     switch (action) {
                         case 0:
                             return;
 
                         case 1:
-                            user.byFromBasket(number - 1);
+                            user.byFromBasket(number - 1);//todo
                             System.out.println("\nУспешно куплено!\n");
                             break;
 
@@ -207,7 +201,7 @@ public class Menu {
         }
     }
 
-    public User checkLogin() {
+    public User login() {
 
         System.out.print("Введите логин --> ");
 
@@ -217,15 +211,15 @@ public class Menu {
         return AppData.findUserByLogin(login);
     }
 
-    public User checkPassword(User user) {
+    public boolean checkPassword(User user) {
         System.out.print("Введите пароль --> ");
         Scanner in = new Scanner(System.in);
         String password = in.next();
         if (user.getPassword().equals(password)) {
-            return user;
+            return true;
         } else {
             System.out.println("\nНеверный пароль!\n");
-            return null;
+            return false;
         }
     }
 }

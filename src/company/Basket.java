@@ -18,15 +18,14 @@ public class Basket {
         }
     }
 
-    public Product remove(int number) {
-        Product product=products.get(number);
+    public void remove(int number) {
         this.products.remove(number);
-        return product;
     }
-    public ArrayList<Product> removeAll(){
-        ArrayList<Product> p=products;
+    public void removeAll(){
         this.products=new ArrayList<>();
-        return p;
+    }
+    public Product getByNumber(int number){
+        return products.get(number);
     }
 
     public void add(Product product) {
@@ -38,5 +37,9 @@ public class Basket {
     }
     public int countProductsInBasket(){
         return products.size();
+    }
+
+    public ArrayList<Product> getProducts() {
+        return products;
     }
 }

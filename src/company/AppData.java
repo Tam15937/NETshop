@@ -45,6 +45,11 @@ public class AppData {
         AppData.getUsers().add(new User("Admin", "admin"));
     }
 
+    public static User registration(String login, String password){
+        User user =new User(login,password);
+        users.add(user);
+        return user;
+    }
 
     public static ArrayList<User> getUsers() {
         return users;

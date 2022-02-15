@@ -54,13 +54,13 @@ public class User {
     }
 
     public void byFromBasket(int number) {
-        Product product = this.basket.remove(number);
-        this.purchase.add(product);
+        this.purchase.add(this.basket.getByNumber(number));
+        this.basket.remove(number);
     }
 
     public void byAllFromBasket(){
-        ArrayList<Product> products=this.basket.removeAll();
-        this.purchase.addAll(products);
+        this.purchase.addAll(this.basket.getProducts());
+        this.basket.removeAll();
     }
 
     public void addToBasket(Product product) {
