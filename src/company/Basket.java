@@ -32,7 +32,7 @@ public class Basket {
         this.products.add(product);
     }
 
-    public boolean checkForProducts(){
+    public boolean lookingForProductsInBasket(){
         return this.products.size() == 0;
     }
     public int countProductsInBasket(){

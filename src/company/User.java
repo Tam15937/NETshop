@@ -42,11 +42,10 @@ public class User {
     }
 
     public void showBasket() {
-        this.basket.show();
-    }
-
-    public boolean lookingForProductsInBasket() {
-        return this.basket.checkForProducts();
+        if (this.basket.lookingForProductsInBasket()) {
+            System.out.println("\nНет товаров в корзине.\n");
+        }
+        else this.basket.show();
     }
 
     public boolean lookingForProductsInPurchases() {

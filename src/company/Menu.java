@@ -15,35 +15,25 @@ public class Menu {
             System.out.println("\n2. Зарегестрироваться");
             System.out.println("0. Выход\n");
             System.out.print("Выберите действие --> ");
-
-
-                switch (action) {
-                    case 1:
-                        User user = login();
-                        if (user != null)
-                            if(checkPassword(user)) {
+            int action = HelpForUser.tryToRead(0, 2);
+            switch (action) {
+                case 1:
+                    User user = login();
+                    if (user != null)
+                        if (checkPassword(user)) {
                             categoryMenu(user);
                         }
-                        break;
+                    break;
 
-                    case 2:
+                case 2:
 //                        User user
-                    case 0:
-                        System.exit(0);
-                    default:
-                        System.out.println("\nНеверный ввод.\n");
-                        break;
-                }
+                case 0:
+                    System.exit(0);
+            }
 
         }
     }
 
-/*    public User registrationMenu() {
-        Scanner in = new Scanner(System.in);
-        String login = in.next();
-        String password = in.next();
-        return AppData.registration(login, password);
-    }*/
 
     public void categoryMenu(User user) {
         while (true) {
@@ -55,21 +45,13 @@ public class Menu {
             System.out.println("\n0. Назад");
             System.out.print("Выберите категорию --> ");
 
-            Scanner in = new Scanner(System.in);
+            int action = HelpForUser.tryToRead(0, categories.size());
 
-            if (in.hasNextInt()) {//todo try
-                int number = in.nextInt();
-                int action = number;
+            if (action != 0) {
+                Category category = categories.get(action - 1);
+                productsMenu(user, category);
+            } else return;
 
-                if (action == 0) return;
-                else if (action > 0 && action <= categories.size()) {
-                    Category category = categories.get(number - 1);
-                    productsMenu(user, category);
-                } else {
-                    System.out.println("\nНеверный номер категории\nВведите номер предложенной категории из списка\n");
-                }
-
-            }
         }
     }
 
@@ -90,38 +72,22 @@ public class Menu {
             System.out.println("0. для выхода");
             System.out.print("\nВведите значение --> ");
 
-            Scanner in = new Scanner(System.in);//todo
-            if (in.hasNextInt()) {
-                int number = in.nextInt();
-                int action = number;
-                if (number > 0 && number <= products.size()) action = 1; //todo
-
-                switch (action) {
-                    case 1:
-                        actionOfProductMenu(products.get(number - 1), user);//todo
-                        break;
-                    case 0:
-                        return;
-                    case -1:
-                        basketMenu(user);
-                        break;
-
-                    case -2:
-                        if (user.lookingForProductsInPurchases())
-                            user.showPurchase();//todo
-                        else System.out.println("Нет покупок, сходите в магазин!");
-                        break;
-                    default:
-                        System.out.println("\nНеверное значение ввода.\n");
-                        break;
-                }
-            } else {
-                System.out.println("\nНеверный формат.\nВводить нужно номер (число) выбранного действия\n Или номер товара\n");
+            int action = HelpForUser.tryToRead(-2, products.size());
+            if (action > 0) {
+                actionOfProductMenu(user, products.get(action - 1));
+            } else if (action == 0) {
+                return;
+            } else if (action == -1) {
+                basketMenu(user);
+            } else if (action == -2) {
+                if (user.lookingForProductsInPurchases())
+                    user.showPurchase();
+                else System.out.println("Нет покупок, сходите в магазин!");
             }
         }
     }
 
-    public void actionOfProductMenu(Product product, User user) {
+    public void actionOfProductMenu(User user, Product product) {
         while (true) {
             System.out.println("\n" + product.toString());
             System.out.println("\n1. Купить товар");
@@ -129,27 +95,18 @@ public class Menu {
             System.out.println("0. Выход\n");
             System.out.print("Выберите действие --> ");
             Scanner in = new Scanner(System.in);
-            if (in.hasNextInt()) {
-                int action = in.nextInt();
-                switch (action) {
+            int action = HelpForUser.tryToRead(0, 2);
+            switch (action) {
+                case 0:
+                    return;
 
-                    case 0:
-                        return;
+                case 1:
+                    user.byProduct(product);
+                    return;
 
-                    case 1:
-                        user.byProduct(product);
-                        return;
-
-                    case 2:
-                        user.addToBasket(product);
-                        return;
-
-                    default:
-                        System.out.println("\nНеверное значение действия\n");
-                        break;
-                }
-            } else {
-                System.out.println("\nНеверный формат.\nВводить нужно номер (число) выбранного действия\n");
+                case 2:
+                    user.addToBasket(product);
+                    return;
             }
         }
     }
@@ -157,47 +114,25 @@ public class Menu {
     public void basketMenu(User user) {
 
         while (true) {
-            if (user.lookingForProductsInBasket()) {//todo
-                System.out.println("\nНет товаров в корзине.\n");
-                return;
-            } else {
-                user.showBasket();
-                System.out.println("\nN. Купить товар под номером N");
-                System.out.println("-1. Купить все товары в корзине");
-                System.out.println("-2. Убрать товар из корзины");
-                System.out.println("0. Выход");
-                System.out.print("\nВведите значение --> ");
-                Scanner in = new Scanner(System.in);//todo
-                if (in.hasNextInt()) {
-                    int number = in.nextInt();
-                    int action = number;
-                    if (action > 0 && action <= user.takeCountsOfProduktsFromBasket()) action = 1;//todo
-                    switch (action) {
-                        case 0:
-                            return;
+            user.showBasket();
+            System.out.println("\nN. Купить товар под номером N");
+            System.out.println("-1. Купить все товары в корзине");
+            System.out.println("-2. Убрать товар из корзины");
+            System.out.println("0. Выход");
+            System.out.print("\nВведите значение --> ");
 
-                        case 1:
-                            user.byFromBasket(number - 1);//todo
-                            System.out.println("\nУспешно куплено!\n");
-                            break;
+            int action = HelpForUser.tryToRead(-2, user.takeCountsOfProduktsFromBasket());
+            if (action > 0) {
+                user.byFromBasket(action - 1);
+                System.out.println("\nУспешно куплено!\n");
 
-                        case -1:
-                            user.byAllFromBasket();
-                            System.out.println("\nУспешно куплено!\n");
-                            break;
+            } else if (action == -1) {
+                user.byAllFromBasket();
+                System.out.println("\nУспешно куплено!\n");
 
-                        case -2:
-                            user.removeFromBasket(number - 1);
-                            break;
-
-                        default:
-                            System.out.println("\nНеверное значение действия");
-                            break;
-                    }
-                } else {
-                    System.out.println("\nНеверный формат.\nВводить нужно номер (число) выбранного действия\n Или номер товара\n");
-                }
-            }
+            } else if (action == -2) {
+                user.removeFromBasket(action - 1);
+            } else return;
         }
     }
 
