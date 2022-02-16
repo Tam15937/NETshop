@@ -22,16 +22,14 @@ public class User {
         System.out.println("\nУспешно куплено!\n");
     }
 
-    public void showPurchase() {
+    public void showPurchase(Category category) {
         if (this.purchase.size() != 0) {
             int k = 1;
             for (Product product : purchase) {
-                System.out.println(k + ". " + product.toString());
+                System.out.println(k + ". " + product.toString(category));
                 k++;
             }
-            System.out.print("\nНажмите Enter, что бы продолжить... ");
-            Scanner in = new Scanner(System.in);
-            String action = in.nextLine();
+
         } else System.out.println("Нет покупок, сходите в магазин!");
     }
 
@@ -67,5 +65,13 @@ public class User {
 
     public void removeFromBasket(int number) {
         this.basket.remove(number);
+    }
+
+    public double purchasePrice(){
+        double price=0;
+        for(Product product:purchase){
+            price+=product.getPrise();
+        }
+        return price;
     }
 }

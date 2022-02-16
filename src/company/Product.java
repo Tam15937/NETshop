@@ -1,4 +1,7 @@
 package company;
+
+import java.text.NumberFormat;
+
 public class Product {
 
 
@@ -14,6 +17,15 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Название: "+name + "\t\tЦена: " + prise + "\t\tРейтинг: " + rate+"\t\t";
+        String priseString = NumberFormat.getInstance().format(this.prise);
+        return "Название: "+name + "\t\tЦена: " + priseString + "\t\tРейтинг: " + rate+"\t\t";
+    }
+
+    public String toString(Category category){
+        String priseString = NumberFormat.getInstance().format(this.prise);
+        return "Название: "+name  + "\t\tКатегория: " + category.getName()+"\t\t"+ "\t\tЦена: " + priseString;
+    }
+    public int getPrise() {
+        return prise;
     }
 }

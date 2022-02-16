@@ -57,19 +57,19 @@ public class Menu {
 
             int action = HelpForUser.tryToRead(-2, products.size(), HelpForUser.stringProductsMenu);
             if (action > 0) {
-                actionOfProductMenu(user, products.get(action - 1));
+                actionOfProductMenu(user, category, products.get(action - 1));
             } else if (action == 0) {
                 return;
             } else if (action == -1) {
-                basketMenu(user);
+                basketMenu(user, category);
             } else if (action == -2) {
-                user.showPurchase();
+                productReport(user,category);
 
             }
         }
     }
 
-    public void actionOfProductMenu(User user, Product product) {
+    public void actionOfProductMenu(User user, Category category, Product product) {
         while (true) {
             System.out.println("\n" + product.toString());
 
@@ -80,6 +80,7 @@ public class Menu {
 
                 case 1:
                     user.byProduct(product);
+                    productReport(user, category);
                     return;
 
                 case 2:
@@ -89,7 +90,7 @@ public class Menu {
         }
     }
 
-    public void basketMenu(User user) {
+    public void basketMenu(User user, Category category) {
 
         while (true) {
             if (user.basketSize() != 0) {
@@ -98,13 +99,13 @@ public class Menu {
                 if (action > 0) {
                     user.byFromBasket(action - 1);
                     System.out.println("\nУспешно куплено!\n");
-
+                    productReport(user, category);
                 } else if (action == -1) {
                     user.byAllFromBasket();
                     System.out.println("\nУспешно куплено!\n");
-
+                    productReport(user, category);
                 } else if (action == -2) {
-                    int number=HelpForUser.tryToRead(1, user.basketSize(),HelpForUser.stringDeleteFromBasket)-1;
+                    int number = HelpForUser.tryToRead(1, user.basketSize(), HelpForUser.stringDeleteFromBasket) - 1;
                     user.removeFromBasket(number);
                 } else return;
             } else {
@@ -112,6 +113,19 @@ public class Menu {
                 return;
             }
         }
+    }
+
+    public void productReport(User user, Category category) {
+        System.out.println("\tПродукты" + "\tКатегория" + "\tЦена");
+        System.out.println("-------------------------------------------------------------------");
+        user.showPurchase(category);
+        System.out.println("-------------------------------------------------------------------");
+        System.out.println("\nИтого\t" + user.purchasePrice());
+
+
+        System.out.print("\nНажмите Enter, что бы продолжить... ");
+        Scanner in = new Scanner(System.in);
+        String action = in.nextLine();
     }
 
     public User login() {
