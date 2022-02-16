@@ -1,6 +1,7 @@
 package company;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Menu {
@@ -11,11 +12,7 @@ public class Menu {
 
     public void authorizationMenu() {
         while (true) {
-            System.out.println("\n1. Авторизоваться");
-            System.out.println("\n2. Зарегестрироваться");
-            System.out.println("0. Выход\n");
-            System.out.print("Выберите действие --> ");
-            int action = HelpForUser.tryToRead(0, 2);
+            int action = HelpForUser.tryToRead(0, 2, HelpForUser.stringMenu);
             switch (action) {
                 case 1:
                     User user = login();
@@ -37,15 +34,10 @@ public class Menu {
 
     public void categoryMenu(User user) {
         while (true) {
+            AppData.showCategories();
             ArrayList<Category> categories = AppData.categories;
-            System.out.println("\nВоть Список категорий");
-            for (int i = 0; i < categories.size(); i++) {
-                System.out.println(i + 1 + ". " + categories.get(i).getName());
-            }
-            System.out.println("\n0. Назад");
-            System.out.print("Выберите категорию --> ");
 
-            int action = HelpForUser.tryToRead(0, categories.size());
+            int action = HelpForUser.tryToRead(0, categories.size(), HelpForUser.stringCategoryMenu);
 
             if (action != 0) {
                 Category category = categories.get(action - 1);
@@ -57,22 +49,13 @@ public class Menu {
 
     public void productsMenu(User user, Category category) {
 
-        ArrayList<Product> products = category.getProducts();
 
         while (true) {
-            System.out.println("\nВоть Список товаров");
 
-            for (int i = 0; i < products.size(); i++) {
-                System.out.println(i + 1 + ". " + products.get(i));
-            }
+            category.showProducts();
+            ArrayList<Product> products = category.getProducts();
 
-            System.out.println("\nN. Выбрать товар под номером N");
-            System.out.println("-2. для просмотра покупок ");
-            System.out.println("-1. для просмотра корзины ");
-            System.out.println("0. для выхода");
-            System.out.print("\nВведите значение --> ");
-
-            int action = HelpForUser.tryToRead(-2, products.size());
+            int action = HelpForUser.tryToRead(-2, products.size(), HelpForUser.stringProductsMenu);
             if (action > 0) {
                 actionOfProductMenu(user, products.get(action - 1));
             } else if (action == 0) {
@@ -80,9 +63,8 @@ public class Menu {
             } else if (action == -1) {
                 basketMenu(user);
             } else if (action == -2) {
-                if (user.lookingForProductsInPurchases())
-                    user.showPurchase();
-                else System.out.println("Нет покупок, сходите в магазин!");
+                user.showPurchase();
+
             }
         }
     }
@@ -90,12 +72,8 @@ public class Menu {
     public void actionOfProductMenu(User user, Product product) {
         while (true) {
             System.out.println("\n" + product.toString());
-            System.out.println("\n1. Купить товар");
-            System.out.println("2. Добавить товар в корзину");
-            System.out.println("0. Выход\n");
-            System.out.print("Выберите действие --> ");
-            Scanner in = new Scanner(System.in);
-            int action = HelpForUser.tryToRead(0, 2);
+
+            int action = HelpForUser.tryToRead(0, 2, HelpForUser.stringActionOfProductMenu);
             switch (action) {
                 case 0:
                     return;
@@ -114,25 +92,25 @@ public class Menu {
     public void basketMenu(User user) {
 
         while (true) {
-            user.showBasket();
-            System.out.println("\nN. Купить товар под номером N");
-            System.out.println("-1. Купить все товары в корзине");
-            System.out.println("-2. Убрать товар из корзины");
-            System.out.println("0. Выход");
-            System.out.print("\nВведите значение --> ");
+            if (user.basketSize() != 0) {
+                user.showBasket();
+                int action = HelpForUser.tryToRead(-2, user.basketSize(), HelpForUser.stringBasketMenu);
+                if (action > 0) {
+                    user.byFromBasket(action - 1);
+                    System.out.println("\nУспешно куплено!\n");
 
-            int action = HelpForUser.tryToRead(-2, user.takeCountsOfProduktsFromBasket());
-            if (action > 0) {
-                user.byFromBasket(action - 1);
-                System.out.println("\nУспешно куплено!\n");
+                } else if (action == -1) {
+                    user.byAllFromBasket();
+                    System.out.println("\nУспешно куплено!\n");
 
-            } else if (action == -1) {
-                user.byAllFromBasket();
-                System.out.println("\nУспешно куплено!\n");
-
-            } else if (action == -2) {
-                user.removeFromBasket(action - 1);
-            } else return;
+                } else if (action == -2) {
+                    int number=HelpForUser.tryToRead(1, user.basketSize(),HelpForUser.stringDeleteFromBasket)-1;
+                    user.removeFromBasket(number);
+                } else return;
+            } else {
+                System.out.println("\nНет товаров в корзине.\n");
+                return;
+            }
         }
     }
 

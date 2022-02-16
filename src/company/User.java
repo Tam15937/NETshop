@@ -23,15 +23,17 @@ public class User {
     }
 
     public void showPurchase() {
+        if (this.purchase.size() != 0) {
             int k = 1;
             for (Product product : purchase) {
                 System.out.println(k + ". " + product.toString());
                 k++;
             }
             System.out.print("\nНажмите Enter, что бы продолжить... ");
-            Scanner in=new Scanner(System.in);
-            String action=in.nextLine();
-        }
+            Scanner in = new Scanner(System.in);
+            String action = in.nextLine();
+        } else System.out.println("Нет покупок, сходите в магазин!");
+    }
 
     public String getLogin() {
         return login;
@@ -42,14 +44,7 @@ public class User {
     }
 
     public void showBasket() {
-        if (this.basket.lookingForProductsInBasket()) {
-            System.out.println("\nНет товаров в корзине.\n");
-        }
-        else this.basket.show();
-    }
-
-    public boolean lookingForProductsInPurchases() {
-        return this.purchase.size() != 0;
+         this.basket.show();
     }
 
     public void byFromBasket(int number) {
@@ -57,7 +52,7 @@ public class User {
         this.basket.remove(number);
     }
 
-    public void byAllFromBasket(){
+    public void byAllFromBasket() {
         this.purchase.addAll(this.basket.getProducts());
         this.basket.removeAll();
     }
@@ -66,11 +61,11 @@ public class User {
         this.basket.add(product);
     }
 
-    public int takeCountsOfProduktsFromBasket() {
-        return this.basket.countProductsInBasket();
+    public int basketSize() {
+        return this.basket.sizeOfProductsInBasket();
     }
 
-    public void removeFromBasket(int number){
+    public void removeFromBasket(int number) {
         this.basket.remove(number);
     }
 }

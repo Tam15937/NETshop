@@ -19,4 +19,11 @@ public class Category {
         return products;
     }
 
+    public void showProducts(){
+        System.out.println("\nВоть Список товаров");
+        for (int i = 0; i < this.products.size(); i++) {
+            System.out.println(i + 1 + ". " + this.products.get(i));
+        }
+    }
+
 }

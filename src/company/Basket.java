@@ -32,10 +32,10 @@ public class Basket {
         this.products.add(product);
     }
 
-    public boolean lookingForProductsInBasket(){
+    public boolean isBasketEmpty(){
         return this.products.size() == 0;
     }
-    public int countProductsInBasket(){
+    public int sizeOfProductsInBasket(){
         return products.size();
     }
 

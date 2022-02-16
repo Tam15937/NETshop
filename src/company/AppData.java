@@ -51,6 +51,12 @@ public class AppData {
         return user;
     }
 
+    public static void showCategories(){
+        System.out.println("\nВоть Список категорий");
+        for (int i = 0; i < categories.size(); i++) {
+            System.out.println(i + 1 + ". " + categories.get(i).getName());
+        }
+    }
     public static ArrayList<User> getUsers() {
         return users;
     }
