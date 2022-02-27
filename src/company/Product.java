@@ -1,6 +1,7 @@
 package company;
 
 import java.text.NumberFormat;
+import java.util.Locale;
 
 public class Product {
 
@@ -18,12 +19,12 @@ public class Product {
     @Override
     public String toString() {
         String priseString = NumberFormat.getInstance().format(this.prise);
-        return "Название: "+name + "\t\tЦена: " + priseString + "\t\tРейтинг: " + rate+"\t\t";
+        return String.format(" |%1$-30s |%2$-10s |%3$-5.4s", this.name,priseString, this.rate);
     }
 
-    public String toString(Category category){
-        String priseString = NumberFormat.getInstance().format(this.prise);
-        return "Название: "+name  + "\t\tКатегория: " + category.getName()+"\t\t"+ "\t\tЦена: " + priseString;
+    public String toString(String category){
+        NumberFormat priseLocale = NumberFormat.getInstance(Locale.getDefault());
+        return String.format(" |%1$-30s |%2$-10s |%3$-6s",this.name,category,this.prise);
     }
     public int getPrise() {
         return prise;
