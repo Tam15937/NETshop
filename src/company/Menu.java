@@ -14,6 +14,7 @@ public class Menu {
 
     public void authorizationMenu() {
         while (true) {
+            AppData.todayDate();
             int action = HelpForUser.tryToRead(0, 2, HelpForUser.stringMenu);
             User user;
             switch (action) {
@@ -91,7 +92,7 @@ public class Menu {
 
     public void actionOfProductMenu(User user, Category category, Product product) {
         while (true) {
-            System.out.format(" |%1$-30s |%2$-10s |%3$-10s\n", "Название", "Цена", "Рейтинг");
+            System.out.format("\n  %1$-30s  %2$-10s  %3$-10s\n", "Название", "Цена", "Рейтинг");
             System.out.println(product.toString());
 
             int action = HelpForUser.tryToRead(0, 2, HelpForUser.stringActionOfProductMenu);

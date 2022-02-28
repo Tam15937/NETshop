@@ -21,7 +21,7 @@ public class Category {
 
     public void showProducts(){
         System.out.println("\nВоть Список товаров\n");
-        System.out.format("\t|%1$-30s |%2$-10s |%3$-10s\n\n","Название","Цена","Рейтинг");
+        System.out.format("\t %1$-30s  %2$-10s  %3$-10s\n\n","Название","Цена","Рейтинг");
         for (int i = 0; i < this.products.size(); i++) {
             System.out.println(i + 1 + ". " + this.products.get(i));
         }

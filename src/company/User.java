@@ -32,8 +32,9 @@ public class User {
 
     public void showPurchase() {
         if (this.purchase.size() != 0) {
+            AppData.todayDate();
             int k = 1;
-            System.out.format("\t|%1$-30s |%2$-10s |%3$-10s\n","Название","Категория","Цена");
+            System.out.format("\t %1$-30s  %2$-10s  %3$-10s\n","Название","Категория","Цена");
             System.out.println("-------------------------------------------------------------------------------------------------------");
             for (String categoryName : purchase.keySet()) {
                 ArrayList<Product> productsArray=purchase.get(categoryName);

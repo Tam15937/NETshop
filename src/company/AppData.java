@@ -1,7 +1,10 @@
 package company;
 
+import javax.swing.text.html.HTMLDocument;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
 
 public class AppData {
     private static ArrayList<User> users = new ArrayList<>();
@@ -59,5 +62,13 @@ public class AppData {
     }
     public static ArrayList<User> getUsers() {
         return users;
+    }
+
+    public static void todayDate(){
+        LocalDate today=LocalDate.now();
+        int year=today.getYear();
+        String month= String.valueOf(today.getMonth());
+        int day=today.getDayOfMonth();
+        System.out.format("\nДата: %1$-3d %2$-9s %3$-5d\n",day,month,year);
     }
 }
