@@ -29,4 +29,12 @@ public class Product {
     public int getPrise() {
         return prise;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public double getRate() {
+        return rate;
+    }
 }

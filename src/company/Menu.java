@@ -9,12 +9,13 @@ public class Menu {
 
     public Menu() {
         Locale.setDefault(this.locale);
-        AppData.initializeForStart();
+//        AppData.initializeForStart();
     }
 
-    public void authorizationMenu() {
+    /*public void authorizationMenu() {
         while (true) {
             AppData.todayDate();
+            AppData.displayAllLoginsAndPasswords();
             int action = HelpForUser.tryToRead(0, 2, HelpForUser.stringMenu);
             User user;
             switch (action) {
@@ -35,25 +36,33 @@ public class Menu {
             }
 
         }
-    }
+    }*/
 
-    public User registrationMenu() {
+    /*public User registrationMenu() {
         System.out.println("\nМеню регистрации\n" + "0. задайте логин/пароль этой цифрой, что бы вернуться\n");
         System.out.print("Придумайте логин --> ");
         Scanner in = new Scanner(System.in);
         String login = in.next();
         if (!login.equals("0")) {
-            System.out.print("Придумайте пароль --> ");
-            String password = in.next();
-            if (!password.equals("0")) {
-                return AppData.registrate(login, password);
+            while (true) {
+                System.out.print("Придумайте пароль --> ");
+                String password = in.next();
+                if (!password.equals("0")) {
+                    System.out.print("Подтвердите пароль --> ");
+                    String confirmPassword = in.next();
+                    if (confirmPassword.equals(password)) {
+                        return AppData.registrate(login, password);
+                    } else {
+                        System.out.println("\nПароли не свопадают!\n");
+                    }
+                } else return null;
             }
         }
         return null;
-    }
+    }*/
 
 
-    public void categoryMenu(User user) {
+    public static void categoryMenu(User user) {
         while (true) {
             AppData.showCategories();
             ArrayList<Category> categories = AppData.categories;
@@ -68,7 +77,7 @@ public class Menu {
         }
     }
 
-    public void productsMenu(User user, Category category) {
+    public static void productsMenu(User user, Category category) {
 
 
         while (true) {
@@ -76,7 +85,7 @@ public class Menu {
             category.showProducts();
             ArrayList<Product> products = category.getProducts();
 
-            int action = HelpForUser.tryToRead(-2, products.size(), HelpForUser.stringProductsMenu);
+            int action = HelpForUser.tryToRead(-3, products.size(), HelpForUser.stringProductsMenu);
             if (action > 0) {
                 actionOfProductMenu(user, category, products.get(action - 1));
             } else if (action == 0) {
@@ -86,11 +95,13 @@ public class Menu {
             } else if (action == -2) {
                 productReport(user);
 
+            } else if (action == -3) {
+                category.sortProductsMenu();
             }
         }
     }
 
-    public void actionOfProductMenu(User user, Category category, Product product) {
+    public static void actionOfProductMenu(User user, Category category, Product product) {
         while (true) {
             System.out.format("\n  %1$-30s  %2$-10s  %3$-10s\n", "Название", "Цена", "Рейтинг");
             System.out.println(product.toString());
@@ -112,7 +123,7 @@ public class Menu {
         }
     }
 
-    public void basketMenu(User user, Category category) {
+    public static void basketMenu(User user, Category category) {
 
         while (true) {
             if (user.basketSize() != 0) {
@@ -139,7 +150,7 @@ public class Menu {
         }
     }
 
-    public void productReport(User user) {
+    public static void productReport(User user) {
 
         user.showPurchase();
         System.out.println("\nИтого\t" + user.purchasePrice());
@@ -160,7 +171,7 @@ public class Menu {
         return AppData.findUserByLogin(login);
     }
 
-    public boolean checkPassword(User user) {
+    /*public boolean checkPassword(User user) {
         System.out.print("Введите пароль --> ");
         Scanner in = new Scanner(System.in);
         String password = in.next();
@@ -170,5 +181,5 @@ public class Menu {
             System.out.println("\nНеверный пароль!\n");
             return false;
         }
-    }
+    }*/
 }

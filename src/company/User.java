@@ -112,4 +112,8 @@ public class User {
         }
         return price;
     }
+
+    public void displayUserLoginAndPassword(){
+        System.out.format("Логин:%1$-20s Пароль:%2$-20s\n",this.login,this.password);
+    }
 }

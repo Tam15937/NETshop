@@ -71,4 +71,12 @@ public class AppData {
         int day=today.getDayOfMonth();
         System.out.format("\nДата: %1$-3d %2$-9s %3$-5d\n",day,month,year);
     }
+
+    public static void displayAllLoginsAndPasswords(){
+        System.out.println("\nСписок пользователей\n");
+        for(User user:users){
+            user.displayUserLoginAndPassword();
+        }
+        System.out.println("");
+    }
 }
