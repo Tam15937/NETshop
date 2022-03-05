@@ -48,7 +48,6 @@ public class HelpForUser {
 
 
     public static String returnInputText(String info,String outText) {
-        while (true) {
             System.out.print("\n "+info+" " + outText + "--> ");
             Scanner in = new Scanner(System.in);
             String text = in.next();
@@ -67,13 +66,12 @@ public class HelpForUser {
                     else
                         throw new WrongInputTextException.WrongPasswordException(WrongInputTextException.wrongSymbol);
 
-
-                return text;
-
             } catch ( WrongInputTextException e) {
                 System.out.print(e);
+                return HelpForUser.returnInputText(info,outText);
             }
-        }
+
+        return text;
     }
 
 
