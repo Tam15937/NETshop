@@ -1,4 +1,7 @@
-package company;
+package helper;
+
+import com.sun.source.tree.WhileLoopTree;
+import org.w3c.dom.ls.LSOutput;
 
 import java.util.Scanner;
 
@@ -37,11 +40,41 @@ public class HelpForUser {
     public static String stringDeleteFromBasket = ("\nВведите номер удаляемого товара из корзины -->");
 
     public static String stringSortProductsMenu = ("\nЧто бы отсортировать, введите критерий сортировки,\n"
-            +"'+' или '-' перед критерием,значит порядок сортировки по возрастанию и убыванию соответсвенно \n"
+            + "'+' или '-' перед критерием,значит порядок сортировки по возрастанию и убыванию соответсвенно \n"
             + "\n1. Название"
             + "\n2. Цена"
             + "\n3. Рейтинг"
             + "\nВведите номер критерия --> ");
+
+
+    public static String returnInputText(String info,String outText) {
+        while (true) {
+            System.out.print("\n "+info+" " + outText + "--> ");
+            Scanner in = new Scanner(System.in);
+            String text = in.next();
+//            String lowerInput = text.toLowerCase();//все заглавные буквы будут переведены в нижний регистр
+            try {
+
+                if (text.length() > 20)
+                    if (outText.equals("логин"))
+                        throw new WrongInputTextException.WrongLoginException(WrongInputTextException.lengthOut);
+                    else
+                        throw new WrongInputTextException.WrongPasswordException(WrongInputTextException.lengthOut);
+
+                if ((text.matches("(.*)\\W(.*)")))// проверяем содержание строки, символа из перечисления W, где W все сиволы не цифры и не буквы и не '_'
+                    if (outText.equals("логин"))
+                        throw new WrongInputTextException.WrongLoginException(WrongInputTextException.wrongSymbol);
+                    else
+                        throw new WrongInputTextException.WrongPasswordException(WrongInputTextException.wrongSymbol);
+
+
+                return text;
+
+            } catch ( WrongInputTextException e) {
+                System.out.print(e);
+            }
+        }
+    }
 
 
     public static int tryToRead(int min, int max, String strMenu) {

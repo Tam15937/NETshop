@@ -1,4 +1,10 @@
-package company;
+package launcher;
+
+import utils.AppData;
+import helper.HelpForUser;
+import entities.Category;
+import entities.Product;
+import entities.User;
 
 import java.util.ArrayList;
 import java.util.Locale;

@@ -1,10 +1,12 @@
-package company;
+package utils;
 
-import javax.swing.text.html.HTMLDocument;
+import entities.Category;
+import entities.Product;
+import entities.User;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Locale;
 
 public class AppData {
     private static ArrayList<User> users = new ArrayList<>();
@@ -17,7 +19,7 @@ public class AppData {
                 return user;
             }
         }
-        System.out.println("\nНеверный логин!\n");
+        System.out.println("\nНе существует пользователя с данным логином!\n");
         return null;
     }
 

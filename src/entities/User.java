@@ -1,9 +1,9 @@
-package company;
+package entities;
 
-import javax.naming.ldap.HasControls;
+import utils.AppData;
+
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Scanner;
 
 public class User {
     private String login;
