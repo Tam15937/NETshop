@@ -9,7 +9,6 @@ import java.util.Scanner;
 public class Authorization {
 
     public Authorization() {
-        AppData.initializeForStart();
     }
 
     public void authorizationMenu() {
@@ -30,7 +29,9 @@ public class Authorization {
 
                 case 2:
                     user = registrationMenu();
-                    if (user != null) Menu.categoryMenu(user);
+                    if (user != null) {
+                        Menu.categoryMenu(user);
+                    }
                     break;
                 case 0:
                     System.exit(0);
@@ -42,7 +43,7 @@ public class Authorization {
     public User login() {
         System.out.println("\nМеню Входа\n" + "0. задайте логин/пароль этой цифрой, что бы вернуться");
         while (true) {
-            String login = HelpForUser.returnInputText("В   ведите", "логин");
+            String login = HelpForUser.returnInputText("Введите", "логин");
 
             if (login.equals("0")) return null;
 
@@ -63,15 +64,15 @@ public class Authorization {
     }
 
     public User registrationMenu() {
-            System.out.println("\nМеню регистрации\n" + "0. задайте логин/пароль этой цифрой, что бы вернуться\n");
+        System.out.println("\nМеню регистрации\n" + "0. задайте логин/пароль этой цифрой, что бы вернуться\n");
 
-            String login = createLogin();
-            if (!login.equals("0")) {
-                    String password = createPassword();
-                    if (!password.equals("0")) {
-                            return AppData.registrate(login, password);
-                    } else return null;
+        String login = createLogin();
+        if (!login.equals("0")) {
+            String password = createPassword();
+            if (!password.equals("0")) {
+                return AppData.registrate(login, password);
             } else return null;
+        } else return null;
     }
 
     public String createLogin() {
@@ -85,11 +86,11 @@ public class Authorization {
 
     public String createPassword() {
         String password = HelpForUser.returnInputText("Придумайте", "пароль");
-        String confirmPassword=HelpForUser.returnInputText("Подтвердите", "пароль");
-        if(!confirmPassword.equals(password)){
+        String confirmPassword = HelpForUser.returnInputText("Подтвердите", "пароль");
+        if (!confirmPassword.equals(password)) {
             System.out.println("\nПароли не свопадают!\n");
             return createPassword();
-        }else return password;
+        } else return password;
     }
 
 

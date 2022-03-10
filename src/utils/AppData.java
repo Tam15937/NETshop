@@ -4,14 +4,22 @@ import entities.Category;
 import entities.Product;
 import entities.User;
 
+import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class AppData {
-    private static ArrayList<User> users = new ArrayList<>();
-    public static ArrayList<Category> categories=new ArrayList<>();
+public final class AppData {
+    private static File userFile;
+    private static ArrayList<User> users;
+    public static ArrayList<Category> categories ;
 
+    public AppData(){
+        users = new ArrayList<>();
+        categories = new ArrayList<>();
+        userFile=new File("userData.txt");
+        fileCheck();
+    }
     public static User findUserByLogin(String login) {
 
         for (User user : AppData.getUsers()) {
@@ -23,7 +31,8 @@ public class AppData {
         return null;
     }
 
-    public static void initializeForStart() {
+    public static void initializeForStart() throws IOException {
+
         ArrayList<Product> gameProducts = new ArrayList<>(Arrays.asList(
                 new Product(1000, "Ведьмак", 0.98),
                 new Product(2000, "Дота", 0.22),
@@ -48,37 +57,58 @@ public class AppData {
         AppData.categories.add(filmCategory);
 
         AppData.getUsers().add(new User("Admin", "admin"));
+        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(userFile, true));
+        oos.writeObject(users);
+
     }
 
-    public static User registrate(String login, String password){
-        User user =new User(login,password);
+    public static User registrate(String login, String password) {
+        User user = new User(login, password);
         users.add(user);
         return user;
     }
 
-    public static void showCategories(){
+    public static void showCategories() {
         System.out.println("\nВоть Список категорий");
         for (int i = 0; i < categories.size(); i++) {
             System.out.println(i + 1 + ". " + categories.get(i).getName());
         }
     }
+
     public static ArrayList<User> getUsers() {
         return users;
     }
 
-    public static void todayDate(){
-        LocalDate today=LocalDate.now();
-        int year=today.getYear();
-        String month= String.valueOf(today.getMonth());
-        int day=today.getDayOfMonth();
-        System.out.format("\nДата: %1$-3d %2$-9s %3$-5d\n",day,month,year);
+    public static void todayDate() {
+        LocalDate today = LocalDate.now();
+        int year = today.getYear();
+        String month = String.valueOf(today.getMonth());
+        int day = today.getDayOfMonth();
+        System.out.format("\nДата: %1$-3d %2$-9s %3$-5d\n", day, month, year);
     }
 
-    public static void displayAllLoginsAndPasswords(){
+    public static void displayAllLoginsAndPasswords() {
         System.out.println("\nСписок пользователей\n");
-        for(User user:users){
+        for (User user : users) {
             user.displayUserLoginAndPassword();
         }
         System.out.println("");
+    }
+
+    public static void fileCheck() {
+        try {
+            if (userFile.createNewFile()) {
+                System.out.println("\nФайл корзины создан.\n"+"Заполнение файла начальными данными...\n");
+                initializeForStart();
+                System.out.println("Начальные данные были успешно записаны в файл!\n");
+            } else {
+                System.out.println("\nФайл корзины уже существует.\n"+"Будем считывать данные...\n");
+                ObjectInputStream ois = new ObjectInputStream(new FileInputStream(userFile));
+                users = (ArrayList<User>) ois.readObject();
+                System.out.println("\nДанные получены!\n");
+            }
+        } catch (Exception e) {
+            System.err.println(e);
+        }
     }
 }

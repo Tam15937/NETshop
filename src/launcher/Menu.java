@@ -10,63 +10,8 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Scanner;
 
-public class Menu {
+public abstract class Menu {
     public Locale locale = Locale.GERMANY;
-
-    public Menu() {
-        Locale.setDefault(this.locale);
-//        AppData.initializeForStart();
-    }
-
-    /*public void authorizationMenu() {
-        while (true) {
-            AppData.todayDate();
-            AppData.displayAllLoginsAndPasswords();
-            int action = HelpForUser.tryToRead(0, 2, HelpForUser.stringMenu);
-            User user;
-            switch (action) {
-                case 1:
-                    user = login();
-                    if (user != null)
-                        if (checkPassword(user)) {
-                            categoryMenu(user);
-                        }
-                    break;
-
-                case 2:
-                    user = registrationMenu();
-                    if (user != null) categoryMenu(user);
-                    break;
-                case 0:
-                    System.exit(0);
-            }
-
-        }
-    }*/
-
-    /*public User registrationMenu() {
-        System.out.println("\nМеню регистрации\n" + "0. задайте логин/пароль этой цифрой, что бы вернуться\n");
-        System.out.print("Придумайте логин --> ");
-        Scanner in = new Scanner(System.in);
-        String login = in.next();
-        if (!login.equals("0")) {
-            while (true) {
-                System.out.print("Придумайте пароль --> ");
-                String password = in.next();
-                if (!password.equals("0")) {
-                    System.out.print("Подтвердите пароль --> ");
-                    String confirmPassword = in.next();
-                    if (confirmPassword.equals(password)) {
-                        return AppData.registrate(login, password);
-                    } else {
-                        System.out.println("\nПароли не свопадают!\n");
-                    }
-                } else return null;
-            }
-        }
-        return null;
-    }*/
-
 
     public static void categoryMenu(User user) {
         while (true) {
@@ -166,26 +111,4 @@ public class Menu {
         Scanner in = new Scanner(System.in);
         String action = in.nextLine();
     }
-
-    public User login() {
-
-        System.out.print("Введите логин --> ");
-
-        Scanner in = new Scanner(System.in);
-        String login = in.next();
-
-        return AppData.findUserByLogin(login);
-    }
-
-    /*public boolean checkPassword(User user) {
-        System.out.print("Введите пароль --> ");
-        Scanner in = new Scanner(System.in);
-        String password = in.next();
-        if (user.getPassword().equals(password)) {
-            return true;
-        } else {
-            System.out.println("\nНеверный пароль!\n");
-            return false;
-        }
-    }*/
 }

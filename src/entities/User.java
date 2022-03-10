@@ -2,10 +2,23 @@ package entities;
 
 import utils.AppData;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class User {
+/*@JsonAutoDetect
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, login = "login",password="password",busket="basket")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Circle.class, name = "Circle"),
+        @JsonSubTypes.Type(value = Triangle.class, name = "Triangle"),
+        @JsonSubTypes.Type(value = Square.class, name = "Rectangle")})*/
+
+
+public class User implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private String login;
     private String password;
     private Basket basket;
@@ -116,4 +129,7 @@ public class User {
     public void displayUserLoginAndPassword(){
         System.out.format("Логин:%1$-20s Пароль:%2$-20s\n",this.login,this.password);
     }
+
+
+
 }

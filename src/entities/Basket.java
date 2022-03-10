@@ -1,9 +1,10 @@
 package entities;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Basket {
+public class Basket implements Serializable {
 
     private HashMap<String, ArrayList<Product>> products;
 

@@ -1,9 +1,10 @@
 package entities;
 
+import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-public class Product {
+public class Product implements Serializable {
 
 
     private int prise;
