@@ -6,37 +6,31 @@ import entities.User;
 
 import java.util.Scanner;
 
-public class Authorization {
-
-    public Authorization() {
-    }
+public class Authorization {//todo сделать статическим
 
     public void authorizationMenu() {
         while (true) {
-            AppData.todayDate();
+            AppData.showTodayDate();
             AppData.displayAllLoginsAndPasswords();
             int action = HelpForUser.tryToRead(0, 2, HelpForUser.stringMenu);
-            User user;
+            User user=null;
             switch (action) {
-                case 1:
-
+                case 1://todo в один метод
                     user = login();
                     if (user != null)
-                        if (checkPassword(user)) {
-                            Menu.categoryMenu(user);
+                        if (!checkPassword(user)) {
+                            user=null;
                         }
                     break;
-
-                case 2:
+                case 2://todo в один метод
                     user = registrationMenu();
-                    if (user != null) {
-                        Menu.categoryMenu(user);
-                    }
                     break;
                 case 0:
                     System.exit(0);
             }
-
+            if (user != null) {
+                Menu.categoryMenu(user);
+            }
         }
     }
 

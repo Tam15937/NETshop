@@ -10,16 +10,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public final class AppData {
-    private static File userFile;
-    private static ArrayList<User> users;
-    public static ArrayList<Category> categories ;
+    private static File userFile=new File("userData.txt");
+    private static ArrayList<User> users= new ArrayList<>();
+    public static ArrayList<Category> categories = new ArrayList<>();
 
-    public AppData(){
-        users = new ArrayList<>();
-        categories = new ArrayList<>();
-        userFile=new File("userData.txt");
-        fileCheck();
-    }
     public static User findUserByLogin(String login) {
 
         for (User user : AppData.getUsers()) {
@@ -55,7 +49,7 @@ public final class AppData {
         AppData.categories.add(gameCategory);
         AppData.categories.add(bookCategory);
         AppData.categories.add(filmCategory);
-
+//todo отдельным методом запись в файл
         AppData.getUsers().add(new User("Admin", "admin"));
         ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(userFile, true));
         oos.writeObject(users);
@@ -79,7 +73,7 @@ public final class AppData {
         return users;
     }
 
-    public static void todayDate() {
+    public static void showTodayDate() {
         LocalDate today = LocalDate.now();
         int year = today.getYear();
         String month = String.valueOf(today.getMonth());
@@ -95,7 +89,7 @@ public final class AppData {
         System.out.println("");
     }
 
-    public static void fileCheck() {
+    public static void fileCheck() {//todo разделить действия в методе
         try {
             if (userFile.createNewFile()) {
                 System.out.println("\nФайл корзины создан.\n"+"Заполнение файла начальными данными...\n");

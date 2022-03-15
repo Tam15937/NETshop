@@ -10,8 +10,7 @@ import java.io.PrintWriter;
 
 public class Main {
     public static void main(String[] args) {
-
-        AppData appData=new AppData();
+        AppData.fileCheck();
         Authorization authorization=new Authorization();
         authorization.authorizationMenu();
     }

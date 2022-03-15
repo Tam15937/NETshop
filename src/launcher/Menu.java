@@ -10,10 +10,10 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Scanner;
 
-public abstract class Menu {
-    public Locale locale = Locale.GERMANY;
+public abstract class Menu {//todo разбить меню на классы
+    public Locale locale = Locale.ENGLISH;
 
-    public static void categoryMenu(User user) {
+    public static void categoryMenu(User user) { //todo добавить доступ к корзине и покупкам
         while (true) {
             AppData.showCategories();
             ArrayList<Category> categories = AppData.categories;
@@ -29,8 +29,6 @@ public abstract class Menu {
     }
 
     public static void productsMenu(User user, Category category) {
-
-
         while (true) {
 
             category.showProducts();
@@ -38,7 +36,7 @@ public abstract class Menu {
 
             int action = HelpForUser.tryToRead(-3, products.size(), HelpForUser.stringProductsMenu);
             if (action > 0) {
-                actionOfProductMenu(user, category, products.get(action - 1));
+                actionOfProductMenu(user, category, products.get(action - 1));//todo переназвать 
             } else if (action == 0) {
                 return;
             } else if (action == -1) {
@@ -52,7 +50,7 @@ public abstract class Menu {
         }
     }
 
-    public static void actionOfProductMenu(User user, Category category, Product product) {
+    public static void actionOfProductMenu(User user, Category category, Product product) {//todo покупка кол-во товара
         while (true) {
             System.out.format("\n  %1$-30s  %2$-10s  %3$-10s\n", "Название", "Цена", "Рейтинг");
             System.out.println(product.toString());
@@ -60,16 +58,16 @@ public abstract class Menu {
             int action = HelpForUser.tryToRead(0, 2, HelpForUser.stringActionOfProductMenu);
             switch (action) {
                 case 0:
-                    return;
+                    break;
 
                 case 1:
-                    user.byProduct(category, product);
+                    user.buyProduct(category, product);
                     productReport(user);
-                    return;
+                    break;
 
                 case 2:
                     user.addToBasket(category, product);
-                    return;
+                    break;
             }
         }
     }
@@ -81,11 +79,11 @@ public abstract class Menu {
                 user.showBasket();
                 int action = HelpForUser.tryToRead(-2, user.basketSize(), HelpForUser.stringBasketMenu);
                 if (action > 0) {
-                    user.byFromBasket(category, action - 1);
+                    user.buyFromBasket(category, action - 1);
                     System.out.println("\nУспешно куплено!\n");
                     productReport(user);
                 } else if (action == -1) {
-                    user.byAllFromBasket();
+                    user.buyAllFromBasket();
                     System.out.println("\nУспешно куплено!\n");
                     productReport(user);
                 } else if (action == -2) {
@@ -109,6 +107,6 @@ public abstract class Menu {
 
         System.out.print("\nНажмите Enter, что бы продолжить... ");
         Scanner in = new Scanner(System.in);
-        String action = in.nextLine();
+        in.nextLine();
     }
 }

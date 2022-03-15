@@ -7,17 +7,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/*@JsonAutoDetect
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, login = "login",password="password",busket="basket")
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = Circle.class, name = "Circle"),
-        @JsonSubTypes.Type(value = Triangle.class, name = "Triangle"),
-        @JsonSubTypes.Type(value = Square.class, name = "Rectangle")})*/
-
 
 public class User implements Serializable {
-    @Serial
-    private static final long serialVersionUID = 1L;
 
     private String login;
     private String password;
@@ -32,7 +23,7 @@ public class User implements Serializable {
         this.purchase = new HashMap<>();
     }
 
-    public void byProduct(Category category, Product product) {
+    public void buyProduct(Category category, Product product) {
         if (this.purchase.containsKey(category.getName())) {
             this.purchase.get(category.getName()).add(product);
         } else {
@@ -45,7 +36,7 @@ public class User implements Serializable {
 
     public void showPurchase() {
         if (this.purchase.size() != 0) {
-            AppData.todayDate();
+            AppData.showTodayDate();
             int k = 1;
             System.out.format("\t %1$-30s  %2$-10s  %3$-10s\n","Название","Категория","Цена");
             System.out.println("-------------------------------------------------------------------------------------------------------");
@@ -76,7 +67,7 @@ public class User implements Serializable {
         this.basket.show();
     }
 
-    public void byFromBasket(Category category, int number) {
+    public void buyFromBasket(Category category, int number) {
         Product product = this.basket.getProducts().get(category.getName()).get(number);
         addToPurchase(category, product);
         this.basket.getProducts().get(category.getName()).remove(number);
@@ -92,7 +83,7 @@ public class User implements Serializable {
         }
     }
 
-    public void byAllFromBasket() {
+    public void buyAllFromBasket() {
         for (String categoryName : this.basket.getProducts().keySet()) {
             ArrayList<Product> productsArray = this.basket.getProducts().get(categoryName);
             if (this.purchase.containsKey(categoryName)) {
@@ -120,7 +111,7 @@ public class User implements Serializable {
         for (String categoryName : this.purchase.keySet()) {
             ArrayList<Product> productsArray = this.purchase.get(categoryName);
             for (Product product : productsArray) {
-                price += product.getPrise();
+                price += product.getPriсe();
             }
         }
         return price;

@@ -37,8 +37,8 @@ public class Category {
         if(action==1)this.products.sort(Comparator.comparing(Product::getName));
         else if(action==-1)this.products.sort(Comparator.comparing(Product::getName).reversed());
 
-        else if(action==2)this.products.sort(Comparator.comparingInt(Product::getPrise));
-        else if(action==-2)this.products.sort(Comparator.comparingInt(Product::getPrise).reversed());
+        else if(action==2)this.products.sort(Comparator.comparingInt(Product::getPriсe));
+        else if(action==-2)this.products.sort(Comparator.comparingInt(Product::getPriсe).reversed());
 
         else if(action==3)this.products.sort(Comparator.comparingDouble(Product::getRate));
         else if(action==-3)this.products.sort(Comparator.comparingDouble(Product::getRate).reversed());
